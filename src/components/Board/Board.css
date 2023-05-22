@@ -1,0 +1,27 @@
+svg g {
+  fill: white;
+  fill-opacity: 1;
+}
+svg g:hover {
+  fill: grey;
+  fill-opacity: 1;
+}
+
+svg g text {
+  font-size: 0.1em;
+  fill: black;
+  fill-opacity: 1;
+  transition: fill-opacity .5s;
+}
+svg path {
+  fill: none;
+  stroke: #03090a;
+  stroke-width: 0.2em;
+  stroke-opacity: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.h-4 {
+  margin-top: 3.5em;
+}
