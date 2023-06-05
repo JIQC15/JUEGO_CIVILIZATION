@@ -1,0 +1,15 @@
+/* Grass */
+.hexagon-grass {
+    fill: #8dbf4b;
+  }
+  
+  /* Water */
+  .hexagon-water {
+    fill: #3d85c6;
+  }
+  
+  /* Land */
+  .hexagon-land {
+    fill: #cca43b;
+  }
+  

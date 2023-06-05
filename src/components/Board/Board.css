@@ -1,21 +1,23 @@
 svg g {
-  fill: white;
-  fill-opacity: 1;
-}
-svg g:hover {
-  fill: grey;
+   fill: rgb(255, 255, 255);  
+  
   fill-opacity: 1;
 }
 
+/* svg g:hover {
+  fill: rgb(128, 128, 128);
+  fill-opacity: 1;
+} */
+
 svg g text {
   font-size: 0.1em;
-  fill: black;
+  fill: rgb(0, 0, 0);
   fill-opacity: 1;
-  transition: fill-opacity .5s;
+  transition: fill-opacity 1s;
 }
 svg path {
   fill: none;
-  stroke: #03090a;
+  stroke: #2a94a7;
   stroke-width: 0.2em;
   stroke-opacity: 0.9;
   stroke-linecap: round;
@@ -23,5 +25,40 @@ svg path {
 }
 
 .h-4 {
-  margin-top: 3.5em;
+  margin-top: 4.0em;
+}
+
+.hexagon {
+  /* Add your desired styling for hexagons */
+  /* For example, you can specify width, height, stroke, etc. */
+  width: 1000px;
+  height: 1000px;
+  stroke: #000000;
+  stroke-width: 0.3px;
+  /* fill: #426116; */
+}
+
+/* Grass */
+.hexagon-grass {
+  fill: #8dbf4b;
+}
+
+/* Water */
+.hexagon-water {
+  fill: #3d85c6;
+}
+
+/* Land */
+.hexagon-land {
+  /* background-image: url(https://www.dalstonmillfabrics.co.uk/pub/media/catalog/product/cache/1313879062af4fe4b91d2ab2cd3e697f/c/r/craft-collection-cotton-print-pixels-brown.jpg); */
+  background-image: url("/Users/emanuelcarbajal/Desktop/soil.jpeg");
+  fill: #533e0a;
+  background-size: cover;
+
+}
+
+.hexagon-image {
+  background-image: url("https://i.pinimg.com/736x/63/af/30/63af3020e5c990258b5911e2bdfc8e7e.jpg");
+  background-size: cover;
+  background-position: center;
 }
