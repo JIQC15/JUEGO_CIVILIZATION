@@ -1,0 +1,21 @@
+.navbar {
+  background-color: #36c07b;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.btn-cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  height: 50px;
+  width: 80px;
+}

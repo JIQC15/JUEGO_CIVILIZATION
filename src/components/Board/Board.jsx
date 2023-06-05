@@ -7,11 +7,12 @@ import {
   Text,
   Hexagon,
   HexUtils,
-  Pattern
+  Pattern,
 } from "react-hexgrid";
 
 // import "./GameMap.css";
 import "../Board/Board.css";
+import Navbar from "../Navbar/Navbar.jsx";
 
 // import "../Board/GameMap.css";
 
@@ -22,7 +23,12 @@ class Board extends Component {
     this.state = {
       hexagons,
       path: { start: null, end: null },
+      selectedType: null,
     };
+  }
+
+  onTypeSelected(type) {
+    this.setState({ selectedType: type });
   }
 
   onClick(event, source) {
@@ -79,10 +85,11 @@ class Board extends Component {
   // }
 
   render() {
-    const { hexagons, path} = this.state;
+    const { hexagons, path, selectedType } = this.state;
     return (
-      <div className="h-4">
-        <HexGrid width={1400} height={720}>
+      <div>
+        <Navbar onTypeSelected={(type) => this.onTypeSelected(type)} />
+        <HexGrid width={1400} height={720} className="h-4">
           <Layout
             size={{ x: 5, y: 5 }}
             flat={false}
@@ -92,52 +99,65 @@ class Board extends Component {
             {hexagons.map((hex, i) => {
               let hexClass = "hexagon";
 
-              
               //  Water //
-               if(hex.s <= 5 && hex.s >= 1 && hex.r >= -6 && hex.r <= -2){
+              if (hex.s <= 5 && hex.s >= 1 && hex.r >= -6 && hex.r <= -2) {
                 hexClass += " hexagon-water";
-               hex.pattern = "water";
-               }
+                hex.pattern = "water";
+              }
 
-              if (hex.r >= 0 && hex.r <= 5 && hex.s <= 0 && hex.s <= 6 && hex.q >= 0 && hex.q <=6) {
+              if (
+                hex.r >= 0 &&
+                hex.r <= 5 &&
+                hex.s <= 0 &&
+                hex.s <= 6 &&
+                hex.q >= 0 &&
+                hex.q <= 6
+              ) {
                 hexClass += " hexagon-water";
-               hex.pattern = "water";
-              } 
+                hex.pattern = "water";
+              }
 
               //  Grass //
-              if (hex.r <= 0  && hex.s <= 0 && hex.q >= 0) {
+              if (hex.r <= 0 && hex.s <= 0 && hex.q >= 0) {
                 hexClass += " hexagon-land";
                 hex.pattern = "grass";
               }
-              if (hex.r <= 0  && hex.s >= 0 && hex.q <= 0) {
+              if (hex.r <= 0 && hex.s >= 0 && hex.q <= 0) {
                 hexClass += " hexagon-grass";
                 hex.pattern = "grass";
-              } 
+              }
 
-              if(hex.q >= -11 && hex.q <= -1){
+              if (hex.q >= -11 && hex.q <= -1) {
                 hex.pattern = "grass";
               }
 
-              if(hex.r >= 1 && hex.r <= 4 && hex.s <= -8 && hex.s >= -11 && hex.q >= 7 && hex.q <= 10){
+              if (
+                hex.r >= 1 &&
+                hex.r <= 4 &&
+                hex.s <= -8 &&
+                hex.s >= -11 &&
+                hex.q >= 7 &&
+                hex.q <= 10
+              ) {
                 hex.pattern = "grass";
               }
 
-              if(hex.q >= 0 && hex.q <= 5 && hex.r == 6){
+              if (hex.q >= 0 && hex.q <= 5 && hex.r == 6) {
                 hex.pattern = "grass";
               }
 
               //  Soil  //
-              if(hex.q >= -12 && hex.q <= -12){
+              if (hex.q >= -12 && hex.q <= -12) {
                 hex.pattern = "soil";
               }
 
-              if(hex.s == 12){
+              if (hex.s == 12) {
                 hex.pattern = "soil";
               }
-              if(hex.s == -12){
+              if (hex.s == -12) {
                 hex.pattern = "soil";
               }
-              if(hex.q == 12){
+              if (hex.q == 12) {
                 hex.pattern = "soil";
               }
 
@@ -156,6 +176,7 @@ class Board extends Component {
                   className={hexClass}
                   onMouseEnter={(e, h) => this.onMouseEnter(e, h)}
                   onClick={(e, h) => this.onClick(e, h)}
+                  onDragStart={(e) => e.preventDefault()}
                 >
                   <Text className="small-text">
                     {
@@ -166,18 +187,25 @@ class Board extends Component {
               );
             })}
             <Path start={path.start} end={path.end} />
-            <Pattern id="soil" link="https://www.dalstonmillfabrics.co.uk/pub/media/catalog/product/cache/1313879062af4fe4b91d2ab2cd3e697f/c/r/craft-collection-cotton-print-pixels-brown.jpg" size={{x:6, y:4.99}}/>
-            <Pattern id="grass" link="https://i.pinimg.com/736x/63/af/30/63af3020e5c990258b5911e2bdfc8e7e.jpg" size={{x:5, y:5}} />
-            <Pattern id="water" link="https://i.pinimg.com/originals/db/7f/87/db7f877b7bc382693084993cf91343bd.png" />
-
+            <Pattern
+              id="soil"
+              link="https://www.dalstonmillfabrics.co.uk/pub/media/catalog/product/cache/1313879062af4fe4b91d2ab2cd3e697f/c/r/craft-collection-cotton-print-pixels-brown.jpg"
+              size={{ x: 6, y: 4.99 }}
+            />
+            <Pattern
+              id="grass"
+              link="https://i.pinimg.com/736x/63/af/30/63af3020e5c990258b5911e2bdfc8e7e.jpg"
+              size={{ x: 5, y: 5 }}
+            />
+            <Pattern
+              id="water"
+              link="https://i.pinimg.com/originals/db/7f/87/db7f877b7bc382693084993cf91343bd.png"
+            />
           </Layout>
-          
         </HexGrid>
       </div>
     );
   }
-  
-  
 }
 
 export default Board;
