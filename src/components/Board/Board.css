@@ -38,28 +38,3 @@ svg path {
   stroke-width: 0.3px;
   /* fill: #426116; */
 }
-
-/* Grass */
-.hexagon-grass {
-  fill: #8dbf4b;
-}
-
-/* Water */
-.hexagon-water {
-  fill: #3d85c6;
-}
-
-/* Land */
-.hexagon-land {
-  /* background-image: url(https://www.dalstonmillfabrics.co.uk/pub/media/catalog/product/cache/1313879062af4fe4b91d2ab2cd3e697f/c/r/craft-collection-cotton-print-pixels-brown.jpg); */
-  background-image: url("/Users/emanuelcarbajal/Desktop/soil.jpeg");
-  fill: #533e0a;
-  background-size: cover;
-
-}
-
-.hexagon-image {
-  background-image: url("https://i.pinimg.com/736x/63/af/30/63af3020e5c990258b5911e2bdfc8e7e.jpg");
-  background-size: cover;
-  background-position: center;
-}

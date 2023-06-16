@@ -4,17 +4,14 @@ import {
   HexGrid,
   Layout,
   Path,
-  Text,
   Hexagon,
   HexUtils,
   Pattern,
+  Text,
 } from "react-hexgrid";
 
-// import "./GameMap.css";
 import "../Board/Board.css";
 import Navbar from "../Navbar/Navbar.jsx";
-
-// import "../Board/GameMap.css";
 
 class Board extends Component {
   constructor(props) {
@@ -23,18 +20,36 @@ class Board extends Component {
     this.state = {
       hexagons,
       path: { start: null, end: null },
-      selectedType: null,
+      selectedType: "",
+      selectedPattern: "",
+      isMouseDown: false,
+      characterHex: null,
+      objectiveHex: null,
     };
   }
 
   onTypeSelected(type) {
-    this.setState({ selectedType: type });
+    const { selectedPattern } = this.state;
+    if (selectedPattern === type) {
+      this.setState({ selectedPattern: "" });
+    } else {
+      this.setState({ selectedPattern: type });
+    }
   }
 
   onClick(event, source) {
+    const { selectedPattern } = this.state;
+    const clickedHex = source.state.hex;
+
+    if (selectedPattern === "character") {
+      this.setState({ characterHex: clickedHex });
+    } else if (selectedPattern === "objective") {
+      this.setState({ objectiveHex: clickedHex });
+    }
+
     const { path } = this.state;
     if (path.start == null) {
-      path.start = source.state.hex;
+      path.start = clickedHex;
     } else {
       path.start = null;
       path.end = null;
@@ -43,146 +58,91 @@ class Board extends Component {
   }
 
   onMouseEnter(event, source) {
-    const { path, hexagons } = this.state;
-    const targetHex = source.state.hex;
-    path.end = targetHex;
-
-    this.setState({ path });
+    const { isMouseDown, hexagons, selectedPattern } = this.state;
+    if (isMouseDown) {
+      const targetHex = source.state.hex;
+      const hexIndex = hexagons.findIndex(
+        (hex) =>
+          hex.q === targetHex.q &&
+          hex.r === targetHex.r &&
+          hex.s === targetHex.s
+      );
+      if (hexIndex !== -1) {
+        const hex = hexagons[hexIndex];
+        if (hex.pattern !== selectedPattern) {
+          const updatedHexagons = [...hexagons];
+          updatedHexagons[hexIndex] = { ...hex, pattern: selectedPattern };
+          this.setState({ hexagons: updatedHexagons });
+        }
+      }
+    }
   }
 
-  // render() {
-  //   let { hexagons, path } = this.state;
-  //   return (
-  //     <div className="h-4">
-  //       <HexGrid width={1000} height={650}>
-  //         <Layout
-  //           size={{ x: 4, y: 4 }}
-  //           flat={false}
-  //           spacing={1.1}
-  //           origin={{ x: 0, y: 0 }}
-  //         >
-  //           {hexagons.map((hex, i) => (
-  //             <Hexagon
-  //               key={i}
-  //               q={hex.q}
-  //               r={hex.r}
-  //               s={hex.s}
-  //               className={hex.props ? hex.props.className : null}
-  //               onMouseEnter={(e, h) => this.onMouseEnter(e, h)}
-  //               onClick={(e, h) => this.onClick(e, h)}
-  //             >
-  //               <Text className="small-text">{
-  //                 //HexUtils.getID(hex)
-  //                 HexUtils.getID()
-  //               }</Text>
-  //             </Hexagon>
-  //           ))}
-  //           <Path start={path.start} end={path.end} />
-  //         </Layout>
-  //       </HexGrid>
-  //     </div>
-  //   );
-  // }
+  onMouseDown() {
+    this.setState({ isMouseDown: true });
+  }
+
+  onMouseUp() {
+    this.setState({ isMouseDown: false });
+  }
 
   render() {
-    const { hexagons, path, selectedType } = this.state;
+    const {
+      hexagons,
+      path,
+      selectedType,
+      selectedPattern,
+      characterHex,
+      objectiveHex,
+    } = this.state;
     return (
       <div>
         <Navbar onTypeSelected={(type) => this.onTypeSelected(type)} />
-        <HexGrid width={1400} height={720} className="h-4">
+        <HexGrid width={1500} height={900} className="h-4">
           <Layout
-            size={{ x: 5, y: 5 }}
+            size={{ x: 3, y: 3 }}
             flat={false}
             spacing={1.05}
             origin={{ x: 0, y: 0 }}
           >
             {hexagons.map((hex, i) => {
               let hexClass = "hexagon";
+              const isCharacterHex =
+                characterHex &&
+                hex.q === characterHex.q &&
+                hex.r === characterHex.r &&
+                hex.s === characterHex.s;
+              const isObjectiveHex =
+                objectiveHex &&
+                hex.q === objectiveHex.q &&
+                hex.r === objectiveHex.r &&
+                hex.s === objectiveHex.s;
 
-              //  Water //
-              if (hex.s <= 5 && hex.s >= 1 && hex.r >= -6 && hex.r <= -2) {
-                hexClass += " hexagon-water";
-                hex.pattern = "water";
-              }
-
-              if (
-                hex.r >= 0 &&
-                hex.r <= 5 &&
-                hex.s <= 0 &&
-                hex.s <= 6 &&
-                hex.q >= 0 &&
-                hex.q <= 6
-              ) {
-                hexClass += " hexagon-water";
-                hex.pattern = "water";
-              }
-
-              //  Grass //
-              if (hex.r <= 0 && hex.s <= 0 && hex.q >= 0) {
-                hexClass += " hexagon-land";
-                hex.pattern = "grass";
-              }
-              if (hex.r <= 0 && hex.s >= 0 && hex.q <= 0) {
-                hexClass += " hexagon-grass";
-                hex.pattern = "grass";
-              }
-
-              if (hex.q >= -11 && hex.q <= -1) {
-                hex.pattern = "grass";
-              }
-
-              if (
-                hex.r >= 1 &&
-                hex.r <= 4 &&
-                hex.s <= -8 &&
-                hex.s >= -11 &&
-                hex.q >= 7 &&
-                hex.q <= 10
-              ) {
-                hex.pattern = "grass";
-              }
-
-              if (hex.q >= 0 && hex.q <= 5 && hex.r == 6) {
-                hex.pattern = "grass";
-              }
-
-              //  Soil  //
-              if (hex.q >= -12 && hex.q <= -12) {
-                hex.pattern = "soil";
-              }
-
-              if (hex.s == 12) {
-                hex.pattern = "soil";
-              }
-              if (hex.s == -12) {
-                hex.pattern = "soil";
-              }
-              if (hex.q == 12) {
-                hex.pattern = "soil";
-              }
-
-              // if (hex.q >= 3 && hex.q <= 8 && hex.r >= 4 && hex.r <= 5) {
-              //   hexClass += "hexagon-land";
-              // } else {
-              //   hexClass += "hexagon-grass";
-              // }
               return (
                 <Hexagon
                   key={i}
                   q={hex.q}
                   r={hex.r}
                   s={hex.s}
-                  fill={hex.pattern}
-                  className={hexClass}
+                  fill={
+                    hex.pattern && hex.pattern !== selectedPattern
+                      ? hex.pattern
+                      : ""
+                  }
                   onMouseEnter={(e, h) => this.onMouseEnter(e, h)}
                   onClick={(e, h) => this.onClick(e, h)}
+                  onMouseDown={() => this.onMouseDown()}
+                  onMouseUp={() => this.onMouseUp()}
                   onDragStart={(e) => e.preventDefault()}
+                  onContextMenu={(e) => e.preventDefault()}
                 >
-                  <Text className="small-text">
-                    {
-                      // HexUtils.getID(hex)
-                    }
-                  </Text>
+                  <g>
+                    {/* Renderizar imagen del personaje si está presente */}
+                    {isCharacterHex && <Text>P</Text>}
+
+                    {/* Renderizar imagen del objetivo si está presente */}
+                    {isObjectiveHex && <Text>O</Text>}
+                  </g>
                 </Hexagon>
               );
             })}

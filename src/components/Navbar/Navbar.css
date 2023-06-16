@@ -12,10 +12,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 button {
   height: 50px;
-  width: 80px;
+  width: 85px;
+  border-radius: 10%;
+}
+
+.navbar-button {
+  /* Estilos base del botón */
+  padding: 10px;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.navbar-button:hover {
+  /* Efecto de crecimiento al pasar el mouse */
+  transform: scale(1.1);
+  background-color: #e0e0e0;
+}
+
+.navbar-button:active {
+  /* Efecto de rebote al hacer clic */
+  transform: scale(0.9);
+  transition-duration: 0.1s;
 }
