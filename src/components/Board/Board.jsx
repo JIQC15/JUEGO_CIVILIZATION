@@ -16,7 +16,11 @@ import Navbar from "../Navbar/Navbar.jsx";
 class Board extends Component {
   constructor(props) {
     super(props);
-    const hexagons = GridGenerator.hexagon(12);
+    const hexagons = GridGenerator.hexagon(12).map((hex) => ({
+      ...hex,
+      weight: Infinity,
+    }));
+
     this.state = {
       hexagons,
       path: { start: null, end: null },
@@ -59,6 +63,13 @@ class Board extends Component {
 
   onMouseEnter(event, source) {
     const { isMouseDown, hexagons, selectedPattern } = this.state;
+
+    const patternWeights = {
+      soil: 1,
+      grass: 10,
+      water: 100,
+    };
+
     if (isMouseDown) {
       const targetHex = source.state.hex;
       const hexIndex = hexagons.findIndex(
@@ -69,9 +80,14 @@ class Board extends Component {
       );
       if (hexIndex !== -1) {
         const hex = hexagons[hexIndex];
+        const selectedWeight = patternWeights[selectedPattern];
         if (hex.pattern !== selectedPattern) {
           const updatedHexagons = [...hexagons];
-          updatedHexagons[hexIndex] = { ...hex, pattern: selectedPattern };
+          updatedHexagons[hexIndex] = {
+            ...hex,
+            pattern: selectedPattern,
+            weight: selectedWeight,
+          };
           this.setState({ hexagons: updatedHexagons });
         }
       }
@@ -137,11 +153,10 @@ class Board extends Component {
                   onContextMenu={(e) => e.preventDefault()}
                 >
                   <g>
-                    {/* Renderizar imagen del personaje si está presente */}
                     {isCharacterHex && <Text>P</Text>}
 
-                    {/* Renderizar imagen del objetivo si está presente */}
                     {isObjectiveHex && <Text>O</Text>}
+                    {/* <Text>{hex.weight}</Text> */}
                   </g>
                 </Hexagon>
               );
