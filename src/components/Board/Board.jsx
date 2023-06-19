@@ -18,12 +18,12 @@ class Board extends Component {
     super(props);
     const hexagons = GridGenerator.hexagon(12).map((hex) => ({
       ...hex,
-      weight: Infinity,
+      distance: Infinity,
     }));
 
     this.state = {
       hexagons,
-      path: { start: null, end: null },
+      path: [],
       selectedType: "",
       selectedPattern: "",
       isMouseDown: false,
@@ -47,26 +47,19 @@ class Board extends Component {
 
     if (selectedPattern === "character") {
       this.setState({ characterHex: clickedHex });
+      console.log("Character coords: ", clickedHex);
     } else if (selectedPattern === "objective") {
       this.setState({ objectiveHex: clickedHex });
+      console.log("Objective coords: ", clickedHex);
     }
-
-    const { path } = this.state;
-    if (path.start == null) {
-      path.start = clickedHex;
-    } else {
-      path.start = null;
-      path.end = null;
-    }
-    this.setState({ path });
   }
 
   onMouseEnter(event, source) {
     const { isMouseDown, hexagons, selectedPattern } = this.state;
 
     const patternWeights = {
-      soil: 1,
-      grass: 10,
+      grass: 1,
+      soil: 10,
       water: 100,
     };
 
@@ -86,9 +79,10 @@ class Board extends Component {
           updatedHexagons[hexIndex] = {
             ...hex,
             pattern: selectedPattern,
-            weight: selectedWeight,
+            distance: selectedWeight,
           };
           this.setState({ hexagons: updatedHexagons });
+          console.log("Updated: ", updatedHexagons);
         }
       }
     }
@@ -111,6 +105,7 @@ class Board extends Component {
       characterHex,
       objectiveHex,
     } = this.state;
+
     return (
       <div>
         <Navbar onTypeSelected={(type) => this.onTypeSelected(type)} />
@@ -128,6 +123,7 @@ class Board extends Component {
                 hex.q === characterHex.q &&
                 hex.r === characterHex.r &&
                 hex.s === characterHex.s;
+
               const isObjectiveHex =
                 objectiveHex &&
                 hex.q === objectiveHex.q &&
@@ -156,7 +152,6 @@ class Board extends Component {
                     {isCharacterHex && <Text>P</Text>}
 
                     {isObjectiveHex && <Text>O</Text>}
-                    {/* <Text>{hex.weight}</Text> */}
                   </g>
                 </Hexagon>
               );

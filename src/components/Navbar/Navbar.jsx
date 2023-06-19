@@ -1,7 +1,7 @@
 import React from "react";
 import "./Navbar.css";
 
-function Navbar({ onTypeSelected }) {
+function Navbar({ onTypeSelected, onFindPathClick }) {
   function handleTypeClick(type) {
     onTypeSelected(type);
     console.log(type);
@@ -40,6 +40,9 @@ function Navbar({ onTypeSelected }) {
         >
           Objective
         </button>
+        {/* <button className="navbar-button" onClick={onFindPathClick}>
+          Find Path
+        </button> */}
       </div>
     </div>
   );
