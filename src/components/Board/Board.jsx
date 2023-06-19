@@ -19,6 +19,7 @@ class Board extends Component {
     const hexagons = GridGenerator.hexagon(12).map((hex) => ({
       ...hex,
       distance: Infinity,
+      previous: null,
     }));
 
     this.state = {
@@ -48,9 +49,13 @@ class Board extends Component {
     if (selectedPattern === "character") {
       this.setState({ characterHex: clickedHex });
       console.log("Character coords: ", clickedHex);
+      const neighbors = this.getNeighbors(clickedHex);
+      console.log("Character neighbors: ", neighbors);
     } else if (selectedPattern === "objective") {
       this.setState({ objectiveHex: clickedHex });
       console.log("Objective coords: ", clickedHex);
+      const neighbors = this.getNeighbors(clickedHex);
+      console.log("Objective neighbors: ", neighbors);
     }
   }
 
@@ -82,7 +87,6 @@ class Board extends Component {
             distance: selectedWeight,
           };
           this.setState({ hexagons: updatedHexagons });
-          console.log("Updated: ", updatedHexagons);
         }
       }
     }
@@ -94,6 +98,15 @@ class Board extends Component {
 
   onMouseUp() {
     this.setState({ isMouseDown: false });
+  }
+
+  getNeighbors(hex) {
+    const { hexagons } = this.state;
+    return HexUtils.neighbors(hex).map((neighbor) =>
+      hexagons.find(
+        (h) => h.q === neighbor.q && h.r === neighbor.r && h.s === neighbor.s
+      )
+    );
   }
 
   render() {
