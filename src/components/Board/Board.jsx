@@ -20,11 +20,12 @@ class Board extends Component {
       ...hex,
       distance: Infinity,
       previous: null,
+      isPath: false,
     }));
 
     this.state = {
       hexagons,
-      path: [],
+      path: { start: null, end: null },
       selectedType: "",
       selectedPattern: "",
       isMouseDown: false,
@@ -43,20 +44,31 @@ class Board extends Component {
   }
 
   onClick(event, source) {
-    const { selectedPattern } = this.state;
+    const { selectedPattern, characterHex, objectiveHex, path } = this.state;
     const clickedHex = source.state.hex;
 
     if (selectedPattern === "character") {
       this.setState({ characterHex: clickedHex });
       console.log("Character coords: ", clickedHex);
+
       const neighbors = this.getNeighbors(clickedHex);
       console.log("Character neighbors: ", neighbors);
+
+      path.start = clickedHex;
     } else if (selectedPattern === "objective") {
       this.setState({ objectiveHex: clickedHex });
       console.log("Objective coords: ", clickedHex);
+
       const neighbors = this.getNeighbors(clickedHex);
       console.log("Objective neighbors: ", neighbors);
+
+      path.end = clickedHex;
     }
+    const distance = HexUtils.distance(characterHex, objectiveHex);
+    console.log(
+      `Distance from ${characterHex} to ${objectiveHex} is ${distance}`
+    );
+    this.setState({ path });
   }
 
   onMouseEnter(event, source) {
